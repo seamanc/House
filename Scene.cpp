@@ -57,8 +57,10 @@ int main()
 	}
 
 	glViewport(0, 0, WIDTH, HEIGHT);
+	glEnable(GL_DEPTH_TEST);
 
 	Cube cube(&user.camera);
+	cube.setTexture("brickwall.jpg");
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -69,7 +71,7 @@ int main()
 		processInput(window);
 
 		glClearColor(0.5f, 1.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		cube.draw();
 		

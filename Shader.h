@@ -18,6 +18,7 @@ public:
 	void use();
 
 	// Functions for setting uniforms in shaders
+	void setUniformInt(int i, const char* name);
 	void setUniformMat4(glm::mat4 mat, const char* name);
 
 private:

@@ -156,18 +156,25 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="UserCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="UserCamera.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cube.fs" />
     <None Include="cube.vs" />
     <None Include="test.fs" />
     <None Include="test.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="brickwall.jpg" />
+    <Image Include="container.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

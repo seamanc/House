@@ -63,6 +63,12 @@ void Shader::use()
 	glUseProgram(ID);
 }
 
+void Shader::setUniformInt(int i, const char* name)
+{
+	int intLoc = glGetUniformLocation(ID, name);
+	glUniform1i(intLoc, i);
+}
+
 void Shader::setUniformMat4(glm::mat4 mat, const char* name)
 {
 	int matLoc = glGetUniformLocation(ID, name);

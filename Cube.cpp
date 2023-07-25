@@ -1,5 +1,8 @@
 #include "Cube.h"
+#include "stb_image.h"
+
 #include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
 
 Cube::Cube(Camera* camera) : shader(CUBE_VERTEX, CUBE_FRAGMENT)
 {
@@ -14,6 +17,9 @@ Cube::Cube(Camera* camera) : shader(CUBE_VERTEX, CUBE_FRAGMENT)
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	// Generate matrices
 	model = glm::mat4(1.0f);
@@ -43,4 +49,31 @@ void Cube::draw()
 	shader.setUniformMat4(projection, "projection");
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
+}
+
+void Cube::setTexture(const char* fileName)
+{
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load(fileName, &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
+	
+	shader.use();
+	shader.setUniformInt(0, "ourTexture");
 }
