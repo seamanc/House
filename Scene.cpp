@@ -4,19 +4,30 @@
 #include <iostream>
 #include "Shader.h"
 #include "Cube.h"
+#include "UserCamera.h"
 
 float vertices[] = {
 	-0.5f, -0.5f, 0.0f,
 	 0.5f, -0.5f, 0.0f,
 	 0.0f,  0.5f, 0.0f
 };
+void frame_buffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void processInput(GLFWwindow* window);
 
 const unsigned int WIDTH = 800;
 const unsigned int HEIGHT = 600;
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+UserCamera user;
 
-void processInput(GLFWwindow* window);
+float lastX = WIDTH / 2.0f;
+float lastY = HEIGHT / 2.0f;
+bool firstMouse = true;
+
+float deltaTime = 0.0f;
+float prevTime = 0.0f;
+
+
 
 int main()
 {
@@ -34,6 +45,10 @@ int main()
 	}
 
 	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback(window, frame_buffer_size_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -43,17 +58,19 @@ int main()
 
 	glViewport(0, 0, WIDTH, HEIGHT);
 
-	Camera camera;
-	Cube cube(&camera);
+	Cube cube(&user.camera);
 
 	while (!glfwWindowShouldClose(window))
 	{
+		float time = glfwGetTime();
+		deltaTime = time - prevTime;
+		prevTime = time;
+
 		processInput(window);
 
 		glClearColor(0.5f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
-		cube.setRotation(glfwGetTime() * 5.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 		cube.draw();
 		
 
@@ -70,8 +87,37 @@ void frame_buffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+{
+	float xpos = static_cast<float>(xposIn);
+	float ypos = static_cast<float>(yposIn);
+
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos;
+
+	lastX = xpos;
+	lastY = ypos;
+
+	user.rotate(xoffset, yoffset);
+}
+
 void processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		user.move(FORWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		user.move(LEFT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		user.move(BACKWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		user.move(RIGHT, deltaTime);
 }

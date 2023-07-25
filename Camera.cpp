@@ -34,6 +34,6 @@ void Camera::move(glm::vec3 vec)
 void Camera::rotate(float degrees, glm::vec3 axis)
 {
 	front = glm::rotate(front, degrees, axis);
-	right = glm::normalize(glm::cross(worldUp, front));
-	up = glm::normalize(glm::cross(front, right));
+	right = glm::normalize(glm::cross(front, worldUp));
+	up = glm::normalize(glm::cross(right, front));
 }
