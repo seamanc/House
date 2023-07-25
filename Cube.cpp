@@ -1,8 +1,9 @@
 #include "Cube.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-Cube::Cube() : shader(CUBE_VERTEX, CUBE_FRAGMENT)
+Cube::Cube(Camera* camera) : shader(CUBE_VERTEX, CUBE_FRAGMENT)
 {
+	this->camera = camera;
 	// Generate vertex objects
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
@@ -17,13 +18,16 @@ Cube::Cube() : shader(CUBE_VERTEX, CUBE_FRAGMENT)
 	// Generate matrices
 	model = glm::mat4(1.0f);
 	view = glm::mat4(1.0f);
-	view = glm::lookAt(glm::vec3(0.0f, 1.0f, 3.0f),
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(0.0f, 1.0f, 0.0f));
 	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 }
 
-void Cube::rotate(float degrees, glm::vec3 axis)
+void Cube::setRotation(float degrees, glm::vec3 axis)
+{
+	model = glm::mat4(1.0f);
+	model = glm::rotate(model, degrees, axis);
+}
+
+void Cube::addRotation(float degrees, glm::vec3 axis)
 {
 	model = glm::rotate(model, degrees, axis);
 }
@@ -32,7 +36,10 @@ void Cube::draw()
 {
 	shader.use();
 	shader.setUniformMat4(model, "model");
+
+	view = camera->viewMatrix();
 	shader.setUniformMat4(view, "view");
+
 	shader.setUniformMat4(projection, "projection");
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 36);

@@ -43,7 +43,8 @@ int main()
 
 	glViewport(0, 0, WIDTH, HEIGHT);
 
-	Cube cube;
+	Camera camera;
+	Cube cube(&camera);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -52,7 +53,7 @@ int main()
 		glClearColor(0.5f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
-		cube.rotate(0.01, glm::vec3(0.0f, 1.0f, 0.0f));
+		cube.setRotation(glfwGetTime() * 5.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 		cube.draw();
 		
 

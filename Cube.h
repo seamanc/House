@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "Shader.h"
+#include "Camera.h"
 
 static const char* CUBE_VERTEX = "cube.vs";
 static const char* CUBE_FRAGMENT = "test.fs";
@@ -14,13 +15,15 @@ class Cube
 public:
     // The Shader program used to render the cube
     Shader shader;
-
-	Cube();
+    Camera* camera;
+	Cube(Camera* camera);
 	
     // Functions to handle transformations of the cube
 	void translate(glm::vec3 vec);
 
-	void rotate(float degress, glm::vec3 axis);
+    void setRotation(float degress, glm::vec3 axis);
+
+	void addRotation(float degress, glm::vec3 axis);
 
 	void scale(glm::vec3 vec);
 
