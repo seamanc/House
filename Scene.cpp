@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Shader.h"
 #include "Cube.h"
+#include "House.h"
 #include "UserCamera.h"
 
 float vertices[] = {
@@ -59,8 +60,12 @@ int main()
 	glViewport(0, 0, WIDTH, HEIGHT);
 	glEnable(GL_DEPTH_TEST);
 
-	Cube cube(&user.camera);
-	cube.setTexture("brickwall.jpg");
+	Cube ground(&user.camera);
+	ground.setTexture("grass.jpg");
+	ground.setScale(glm::vec3(50.0f, 0.1f, 50.0f));
+
+	House house(&user.camera);
+	
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -73,7 +78,8 @@ int main()
 		glClearColor(0.5f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		cube.draw();
+		ground.draw();
+		house.draw();
 		
 
 		glfwSwapBuffers(window);

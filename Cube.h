@@ -19,13 +19,11 @@ public:
 	Cube(Camera* camera);
 	
     // Functions to handle transformations of the cube
-	void translate(glm::vec3 vec);
+	void setTranslation(glm::vec3 vec);
 
     void setRotation(float degress, glm::vec3 axis);
 
-	void addRotation(float degress, glm::vec3 axis);
-
-	void scale(glm::vec3 vec);
+	void setScale(glm::vec3 vec);
 
     // Function called to render cube on screen
 	void draw();

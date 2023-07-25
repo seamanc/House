@@ -27,19 +27,26 @@ Cube::Cube(Camera* camera) : shader(CUBE_VERTEX, CUBE_FRAGMENT)
 	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 }
 
+void Cube::setTranslation(glm::vec3 vec)
+{
+	model = glm::translate(model, vec);
+}
+
 void Cube::setRotation(float degrees, glm::vec3 axis)
 {
-	model = glm::mat4(1.0f);
 	model = glm::rotate(model, degrees, axis);
 }
 
-void Cube::addRotation(float degrees, glm::vec3 axis)
+void Cube::setScale(glm::vec3 vec)
 {
-	model = glm::rotate(model, degrees, axis);
+	model = glm::scale(model, vec);
 }
 
 void Cube::draw() 
 {
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
 	shader.use();
 	shader.setUniformMat4(model, "model");
 
